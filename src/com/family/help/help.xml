@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : help.xml.xml
+    Created on : December 12, 2006, 11:14 AM
+    Author     : ading
+    Description:
+        Purpose of the document follows.
+-->
+
+<root name="Solitaire">
+    <overview name="Solitaire overview" link="intro.html" />
+    <rule name="Play Solitaire" link="rule.html">
+        <easy name="Easy rule" link="easy.html" />
+        <medium name="Medium rule" link="med.html" />
+        <difficult name="Difficult rule" link="diff.html" />
+    </rule>
+    <win name="Win or Lose" link="winlose.html" />
+    <tip name="Tips" link="tip.html" />
+</root>

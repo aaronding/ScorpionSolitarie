@@ -20,15 +20,15 @@ import javax.swing.JRadioButton;
  * @author Aaron
  */
 public class ImageRadioButton extends JRadioButton {
-    
+
     /** Creates a new instance of ImageRadioButton */
     public ImageRadioButton(Image image) {
         this.image = image;
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
-        
+
         if (this.isSelected()) {
             g.drawImage(image, 0, 0, this);
             g.setColor(Color.YELLOW);
@@ -39,6 +39,6 @@ public class ImageRadioButton extends JRadioButton {
             g.drawImage(image, 0, 0, this);
         }
     }
-    
+
     private Image image;
 }

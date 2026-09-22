@@ -21,7 +21,7 @@ import com.family.solitaire.model.Game;
  * @author  Aaron
  */
 public class MainFrame extends javax.swing.JFrame {
-    
+
     /** Creates new form MainFrame */
     public MainFrame() {
         super();
@@ -31,19 +31,19 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(l);
         setSize(800,600);
         setLocationRelativeTo(this);
-        
+
         game = new Game();
         MainPanel mainPanel = new MainPanel(game);
 
         getContentPane().add(mainPanel);
-        
+
         levelDlg = new JDialog(this, "Difficulty", true);
         pane = new LevelPanel();
         levelDlg.setContentPane(pane);
         levelDlg.pack();
         levelDlg.setLocationRelativeTo(this);
         levelDlg.setResizable(false);
-        
+
         rearDlg = new JDialog(this, "Select Card Back", true);
         rearPane = new RearPanel();
         rearDlg.setContentPane(rearPane);
@@ -51,7 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
         rearDlg.setLocationRelativeTo(this);
         rearDlg.setResizable(false);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -212,8 +212,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_contentsActionPerformed
 
     private void aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutActionPerformed
-        AboutDialog about = new AboutDialog(this, true, 
-            ImageStore.instance().getIcon(), APP_NAME, "1.0", "Aaron Ding", 
+        AboutDialog about = new AboutDialog(this, true,
+            ImageStore.instance().getIcon(), APP_NAME, "1.0", "Aaron Ding",
             "aaron.ding@hotmail.com");
         about.setLocationRelativeTo(this);
         about.setVisible(true);
@@ -231,9 +231,9 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_deckActionPerformed
 
     private void difficultyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_difficultyActionPerformed
-        
+
         levelDlg.setVisible(true);
-        
+
         if (pane.getRetValue()) {
             level = pane.getLevel();
             game.init(level);
@@ -276,7 +276,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void dealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dealActionPerformed
         if (level == null) {
             levelDlg.setVisible(true);
-            
+
             if (pane.getRetValue()) {
                 level = pane.getLevel();
                 game.init(level);
@@ -309,13 +309,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     private Game game;
     private String level;
-    
+
     private JDialog levelDlg;
     private LevelPanel pane;
-    
+
     private JDialog rearDlg;
     private RearPanel rearPane;
-    
+
     private static final String APP_NAME = "Scorpion Solitaire";
     private static final String FILE_NAME = "Scorpion.dat";
 }

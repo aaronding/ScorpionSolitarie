@@ -23,23 +23,23 @@ import com.family.solitaire.model.Card.Rank;
  * @author Aaron Ding
  */
 public abstract class BaseRule implements Rule {
-    
+
     public BaseRule() {
     }
-    
+
     public boolean isValidFrom(Position position, Board board) {
         return board.getCard(position).isFacedUp();
     }
-    
+
     public boolean checkResult(Board board) {
         for (int j=0; j<NCOLS; j++) {
             if (board.getColumn(j).isEmpty()) {
                 continue;
             }
-            
+
             if (board.getColumn(j).getSize() != CARDS_IN_SUIT)
                 return false;
-            
+
             if (board.getCard(0,j).rank() != Rank.KING) {
                 return false;
             }
@@ -51,10 +51,10 @@ public abstract class BaseRule implements Rule {
             if (board.getCard(CARDS_IN_SUIT, j) != null)
                 return false;
         }
-        
+
         return true;
     }
-    
+
     // return null if you lose the game
     public Move[] getAvailableMoves(Board board) {
         ArrayList<Move> ret = new ArrayList<Move>();
@@ -94,6 +94,6 @@ public abstract class BaseRule implements Rule {
         else
             return ret.toArray(new Move[0]);
     }
-    
+
     abstract protected Card[] getFollowingCards(Card target);
 }

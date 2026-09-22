@@ -21,13 +21,13 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Aaron
  */
 public class HelpHandler extends DefaultHandler {
-    
+
     /** Creates a new instance of HelpHandler */
     public HelpHandler() {
         stack = new Stack<DefaultMutableTreeNode>();
     }
-    
-    public void startElement (String uri, String localName, String qName, 
+
+    public void startElement (String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         if (stack.empty()) {
             root = new DefaultMutableTreeNode(new NodeInfo(attributes));
@@ -40,16 +40,16 @@ public class HelpHandler extends DefaultHandler {
             stack.push(node);
         }
     }
-    
+
     public void endElement (String uri, String localName, String qName)
 	throws SAXException {
 	stack.pop();
     }
-    
+
     public DefaultMutableTreeNode getNodes() {
         return root;
     }
-    
+
     private DefaultMutableTreeNode root;
     private Stack<DefaultMutableTreeNode> stack;
 }

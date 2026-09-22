@@ -16,7 +16,7 @@ import org.xml.sax.Attributes;
  * @author Aaron
  */
 public class NodeInfo {
-    
+
     NodeInfo(Attributes attributes) {
         if (attributes.getLength() ==1) {
             name = attributes.getValue("name");
@@ -25,11 +25,11 @@ public class NodeInfo {
             url = attributes.getValue("link");
         }
     }
-    
+
     public String toString() {
         return name;
     }
-    
+
     String name;
     String url;
 }

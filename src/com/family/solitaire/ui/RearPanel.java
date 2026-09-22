@@ -11,12 +11,12 @@ package com.family.solitaire.ui;
  * @author  Aaron
  */
 public class RearPanel extends javax.swing.JPanel {
-    
+
     /** Creates new form RearPanel */
     public RearPanel() {
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -106,14 +106,14 @@ public class RearPanel extends javax.swing.JPanel {
         isok = true;
         getTopLevelAncestor().setVisible(false);
     }//GEN-LAST:event_okActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton ok;
     // End of variables declaration//GEN-END:variables
-    
+
     boolean isok;
     private int index;
     private ImageRadioButton[] radios;

@@ -11,12 +11,12 @@ package com.family.solitaire.ui;
  * @author  Aaron
  */
 public class LevelPanel extends javax.swing.JPanel {
-    
+
     /** Creates new form LevelPanel */
     public LevelPanel() {
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -118,7 +118,7 @@ public class LevelPanel extends javax.swing.JPanel {
         retValue = true;
         getTopLevelAncestor().setVisible(false);
     }//GEN-LAST:event_okActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup;
     private javax.swing.JButton cancel;
@@ -128,23 +128,23 @@ public class LevelPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton medium;
     private javax.swing.JButton ok;
     // End of variables declaration//GEN-END:variables
-    
+
     private boolean retValue;
-    
+
     public boolean getRetValue() {
         return retValue;
     }
-    
+
     public String getLevel() {
         if (easy.isSelected())
             return "easy";
-        
+
         if (medium.isSelected())
             return "medium";
-        
+
         if (difficult.isSelected())
             return "difficult";
-        
+
         throw new IllegalStateException("");
     }
 }

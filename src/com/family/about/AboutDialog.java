@@ -19,9 +19,9 @@ import javax.swing.JFileChooser;
  * @author  ading
  */
 public class AboutDialog extends javax.swing.JDialog {
-    
+
     /** Creates new form AboutDialog */
-    public AboutDialog(java.awt.Frame parent, boolean modal, Image iconImage, 
+    public AboutDialog(java.awt.Frame parent, boolean modal, Image iconImage,
         String appName, String appVer, String author, String email) {
         super(parent, modal);
         this.icon = iconImage;
@@ -31,7 +31,7 @@ public class AboutDialog extends javax.swing.JDialog {
         this.email = email;
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -192,7 +192,7 @@ public class AboutDialog extends javax.swing.JDialog {
             InputStream in = AboutDialog.class.getClassLoader().
                 getResourceAsStream("com/family/about/" + fileName);
             byte[] buffer = new byte[1000];
-            
+
             OutputStream out = null;
             try {
                 out = new FileOutputStream(file);
@@ -208,7 +208,7 @@ public class AboutDialog extends javax.swing.JDialog {
             }
         }
     }
-    
+
     private void srcBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_srcBtnActionPerformed
         saveFile("src.zip");
     }//GEN-LAST:event_srcBtnActionPerformed
@@ -217,7 +217,7 @@ public class AboutDialog extends javax.swing.JDialog {
         setVisible(false);
         dispose();
     }//GEN-LAST:event_okBtnActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLbl;
     private javax.swing.JButton getGPLBtn;
@@ -232,7 +232,7 @@ public class AboutDialog extends javax.swing.JDialog {
     private javax.swing.JLabel programNameLbl;
     private javax.swing.JButton srcBtn;
     // End of variables declaration//GEN-END:variables
-    
+
     private Image icon;
     private String appName;
     private String appVer;

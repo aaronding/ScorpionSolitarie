@@ -12,8 +12,8 @@ package com.family.solitaire.model;
  * @author Aaron Ding
  */
 public class Position {
-    
+
     public Position(int x, int y) {row = x; column = y; }
-    public int row; 
+    public int row;
     public int column;
 }

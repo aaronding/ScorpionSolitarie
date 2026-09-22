@@ -17,14 +17,14 @@ import javax.xml.parsers.SAXParserFactory;
  * @author  Aaron
  */
 public class HelpDialog extends javax.swing.JDialog {
-    
+
     /** Creates new form HelpDialog */
     public HelpDialog(java.awt.Frame parent, boolean modal, String appName) {
         super(parent, modal);
         this.appName = appName;
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -109,9 +109,9 @@ public class HelpDialog extends javax.swing.JDialog {
                 e.printStackTrace();
             }
         }
-        
+
     }//GEN-LAST:event_treeValueChanged
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane htmlPane;
     private javax.swing.JScrollPane jScrollPane1;
@@ -119,7 +119,7 @@ public class HelpDialog extends javax.swing.JDialog {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTree tree;
     // End of variables declaration//GEN-END:variables
-    
+
     private String appName;
     private static final String PATH = "com/family/help/";
 }

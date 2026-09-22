@@ -12,7 +12,7 @@ package com.family.solitaire.model;
  * @author Aaron Ding
  */
 public class CardConstants {
-    
+
     public static final int NCOLS = 7;
     public static final int RESERVE_SIZE = 3;
     public static final int NCARDS = 52;

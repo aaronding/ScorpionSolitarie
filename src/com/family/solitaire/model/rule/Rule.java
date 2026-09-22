@@ -22,6 +22,6 @@ public interface Rule {
     boolean isValidFrom(Position position, Board board);
     boolean checkResult(Board board);
     Move[] getAvailableMoves(Board board);
-    
+
     String getLevel();
 }

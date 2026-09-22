@@ -23,13 +23,13 @@ import com.family.solitaire.model.rule.RuleFactory;
  * @author Aaron Ding
  */
 public class Game {
-    
+
     public Game() {
         deck = new Deck();
         board = new Board();
         history = new MoveHistory();
     }
-    
+
     public void init(String level) {
         rule = RuleFactory.instance().createRule(level);
         deck.shuffle();
@@ -37,7 +37,7 @@ public class Game {
         deal();
         history.clear();
     }
-    
+
     private void deal() {
         for (int j=0; j<NCOLS; j++) {
             for (int i=0; i<7; i++) {
@@ -53,7 +53,7 @@ public class Game {
             board.getColumn(j).repaintUI();
         }
 
-        
+
         Card[] t = new Card[RESERVE_SIZE];
         for (int k=0; k<3; k++) {
             t[k] = deck.getCard(k+49);
@@ -61,12 +61,12 @@ public class Game {
         }
         board.getReserve().putCards(t);
     }
-    
+
     public void load(String fileName) throws Exception {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(fileName));
-            
+
             String line = reader.readLine();
             rule = RuleFactory.instance().createRule(line);
 
@@ -79,7 +79,7 @@ public class Game {
                 t[i] = Card.valueOf(Integer.parseInt(fields[i]));
             }
             board.getReserve().putCards(t);
-            
+
 
             for (int c=0; c<NCOLS; c++) {
                 line = reader.readLine();
@@ -98,7 +98,7 @@ public class Game {
             try { reader.close(); } catch(Exception e) { }
         }
     }
-    
+
     public void save(String fileName) throws Exception {
 
         FileWriter writer = null;
@@ -114,7 +114,7 @@ public class Game {
                     writer.write(r[i].toValue() + "\t");
             }
             writer.write("\n");
-            
+
             for (int c=0; c<NCOLS; c++) {
                 Column col = board.getColumn(c);
                 int size = col.getSize();
@@ -130,7 +130,7 @@ public class Game {
             try { writer.close(); } catch(Exception e) { }
         }
     }
-    
+
     public boolean move(Move move) {
         if (rule.isValidMove(move, board)) {
             if (board.moveCards(move)) {
@@ -142,7 +142,7 @@ public class Game {
         }
         return false;
     }
-    
+
     public Move move(Move[] moves) {
         for(Move move : moves) {
             if (move(move)) {
@@ -155,7 +155,7 @@ public class Game {
     public boolean useReserve() {
         if (isReserveUsed())
             return false;
-        
+
         Card[] reserve = board.getReserve().pickCards();
         for (int i=0; i<reserve.length; i++) {
             int len = board.getColumn(i).getSize();
@@ -166,14 +166,14 @@ public class Game {
         history.clear();
         return true;
     }
-    
+
     public void undo() {
         Move move = history.previous();
         if (move != null) {
             board.moveCards(new Move(move.getTo(), move.getFrom()));
         }
     }
-    
+
     public void redo() {
         Move move = history.next();
         if (move != null) {
@@ -185,7 +185,7 @@ public class Game {
     public boolean checkResult() {
         return rule.checkResult(board);
     }
-    
+
     // return null if you lose the game
     public Move[] getAvailableMove() {
         Move[] ret = rule.getAvailableMoves(board);
@@ -198,11 +198,11 @@ public class Game {
         }
         return null;
     }
-    
+
     public boolean isValidFrom(Position p) {
         return rule.isValidFrom(p, board);
     }
-    
+
     public Card[] getCards(Position p) {
         int size = board.getColumn(p.column).getSize()- p.row;
 
@@ -212,15 +212,15 @@ public class Game {
         }
         return ret;
     }
-    
+
     private boolean isReserveUsed() { return board.getReserve().used(); }
-    
+
     public Column getColumn(int i) { return board.getColumn(i); }
     public Reserve getReserve() { return board.getReserve(); }
 
     private Rule rule;
     private Deck deck;
     private Board board;
-    
+
     private MoveHistory history;
 }

@@ -31,44 +31,44 @@ import com.family.solitaire.model.Position;
  * @author  ading
  */
 public class MainPanel extends javax.swing.JPanel {
-    
+
     /** Creates new form BgForm */
     public MainPanel(Game game) {
         super();
         initComponents();
         this.setFocusable(true);
         this.game = game;
-        
+
         tmpColumn = new TmpColumnCtrl();
         tmpColumn.setVisible(false);
         add(tmpColumn);
-        
+
         reserve = new ReserveCtrl(game.getReserve());
         add(reserve);
-        
+
         columns = new ColumnCtrl[NCOLS];
         for (int i=0; i<NCOLS; i++) {
             add(columns[i] = new ColumnCtrl(game.getColumn(i)));
         }
-        
+
         relativePos = new Point(0, 0);
-        
+
         pressing = false;
     }
-    
+
     public void initColumns() {
         for (int i=0; i<NCOLS; i++) {
             columns[i].resetCardsSpace();
         }
     }
-    
+
     public void hilightHint(Move move) {
         if (!pressing && move!=null && !move.isUseReserve()) {
             this.move = move;
             timer.start();
         }
     }
-    
+
     private ActionListener taskPerformer = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             if (timerCount == 0) {
@@ -88,11 +88,11 @@ public class MainPanel extends javax.swing.JPanel {
             }
         }
     };
-    
+
     private int timerCount = 0;
     private Timer timer = new Timer(200, taskPerformer);
     private Move move;
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -156,7 +156,7 @@ public class MainPanel extends javax.swing.JPanel {
         if (reserve.getBounds().contains(evt.getPoint())) {
             if (game.useReserve()) {
                 reserve.repaint();
-                
+
                 if (game.checkResult()) {
                     JOptionPane.showMessageDialog(this, "You win!");
                 } else if (game.getAvailableMove() == null) {
@@ -171,7 +171,7 @@ public class MainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_onComponentResized
 
     private void onReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onReleased
-        
+
         switch (evt.getButton()) {
             case java.awt.event.MouseEvent.BUTTON1:
                 onLeftBtnReleased(evt);
@@ -197,16 +197,16 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void onDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onDragged
         tmpColumn.setBounds(
-            evt.getPoint().x - relativePos.x, 
-            evt.getPoint().y - relativePos.y, 
-            tmpColumn.getWidth(), 
+            evt.getPoint().x - relativePos.x,
+            evt.getPoint().y - relativePos.y,
+            tmpColumn.getWidth(),
             tmpColumn.getHeight());
     }//GEN-LAST:event_onDragged
-    
- 
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    
+
     private void doHint() {
         if (availableMoves == null) {
             availableMoves = game.getAvailableMove();
@@ -219,7 +219,7 @@ public class MainPanel extends javax.swing.JPanel {
             }
         }
     }
-    
+
     private void onLeftBtnPressed(java.awt.event.MouseEvent evt) {
         Position p = getPosition(evt.getPoint());
         if (p == null)
@@ -229,39 +229,39 @@ public class MainPanel extends javax.swing.JPanel {
             pressing = true;
 
             columns[p.column].selectRow(p.row);
-            
+
             Point cardPos = columns[p.column].getCardPosition(p.row);
 
             relativePos.x = evt.getX() - cardPos.x;
             relativePos.y = evt.getY() - cardPos.y;
-            
+
             tmpColumn.setCards(game.getCards(p));
             tmpColumn.setCardSpace(columns[p.column].getCardSpace());
             tmpColumn.calHeight();
             tmpColumn.setBounds(
-                cardPos.x, 
-                cardPos.y, 
-                tmpColumn.getWidth(), 
+                cardPos.x,
+                cardPos.y,
+                tmpColumn.getWidth(),
                 tmpColumn.getHeight());
 
             tmpColumn.setVisible(true);
-            
+
             from = p;
             from.row--;
         }
     }
-    
+
     private void onRightBtnPressed(java.awt.event.MouseEvent evt) {
         if (pressing)
             return;
-        
+
         Position p = getPosition(evt.getPoint());
         if (p == null)
             return;
         columns[p.column].viewCard(p.row);
         viewColumn = p.column;
     }
-    
+
     private void onLeftBtnReleased(java.awt.event.MouseEvent evt) {
 
         if (pressing) {
@@ -287,14 +287,14 @@ public class MainPanel extends javax.swing.JPanel {
             }
         }
     }
-    
+
     private void onRightBtnReleased(java.awt.event.MouseEvent evt) {
         columns[viewColumn].viewCardOff();
     }
-    
+
     private void reshape() {
         reserve.setBounds(LEFTMARGIN, TOPMARGIN, reserve.getWidth(), reserve.getHeight());
-        
+
         int gap = (getWidth()-FIRSTCARDX-NCOLS*CARDWIDTH)/(NCOLS+1);
         int x = FIRSTCARDX + gap;
         int interval = gap + CARDWIDTH;
@@ -304,7 +304,7 @@ public class MainPanel extends javax.swing.JPanel {
             x += interval;
         }
     }
-    
+
     private Position[] getToPositions() {
         ArrayList<Position> ret = new ArrayList<Position>(NCARDS);
         Rectangle rvDes = new Rectangle();
@@ -317,7 +317,7 @@ public class MainPanel extends javax.swing.JPanel {
         }
         return ret.toArray(new Position[0]);
     }
-    
+
     private Position getPosition(Point point) {
         Rectangle rv = new Rectangle();
         for (ColumnCtrl column : columns) {
@@ -339,13 +339,13 @@ public class MainPanel extends javax.swing.JPanel {
     private ReserveCtrl reserve;
     private ColumnCtrl[] columns;
     private TmpColumnCtrl tmpColumn;
-    
+
     private boolean pressing;
     private Point relativePos;
     private int viewColumn;
-    
+
     private Position from;
-    
+
     private Move[] availableMoves;
     private int curMove;
 }

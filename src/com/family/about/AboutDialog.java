@@ -6,13 +6,16 @@
 
 package com.family.about;
 
+import java.awt.Desktop;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -103,7 +106,7 @@ public class AboutDialog extends javax.swing.JDialog {
         );
 
         programNameLbl.setFont(new java.awt.Font("Arial Black", 0, 24));
-        programNameLbl.setText(this.appName + " V" + this.appVer);
+        programNameLbl.setText("<html>" + this.appName + "<br><span style='font-family:Arial; font-size:14pt'>Version " + this.appVer + "</span></html>");
 
         authorLbl.setText("Author:");
 
@@ -113,7 +116,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         jLabel7.setText(this.email);
 
-        srcBtn.setText("Get Source Code");
+        srcBtn.setText("Source Code on GitHub");
         srcBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 srcBtnActionPerformed(evt);
@@ -210,7 +213,11 @@ public class AboutDialog extends javax.swing.JDialog {
     }
 
     private void srcBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_srcBtnActionPerformed
-        saveFile("src.zip");
+        try {
+            Desktop.getDesktop().browse(new URI(SOURCE_URL));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "The source code is at\n" + SOURCE_URL);
+        }
     }//GEN-LAST:event_srcBtnActionPerformed
 
     private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed
@@ -232,6 +239,9 @@ public class AboutDialog extends javax.swing.JDialog {
     private javax.swing.JLabel programNameLbl;
     private javax.swing.JButton srcBtn;
     // End of variables declaration//GEN-END:variables
+
+    private static final String SOURCE_URL =
+        "https://github.com/aaronding/ScorpionSolitarie";
 
     private Image icon;
     private String appName;

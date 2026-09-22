@@ -213,8 +213,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutActionPerformed
         AboutDialog about = new AboutDialog(this, true,
-            ImageStore.instance().getIcon(), APP_NAME, "1.0", "Aaron Ding",
-            "aaron.ding@hotmail.com");
+            ImageStore.instance().getIcon(), APP_NAME, APP_VERSION, "Aaron Ding",
+            "scorpion@webthinking.io");
         about.setLocationRelativeTo(this);
         about.setVisible(true);
     }//GEN-LAST:event_aboutActionPerformed
@@ -318,6 +318,10 @@ public class MainFrame extends javax.swing.JFrame {
     private RearPanel rearPane;
 
     private static final String APP_NAME = "Scorpion Solitaire";
+    // Stamped into the jar manifest by build.sh from the git tag
+    private static final String APP_VERSION =
+        MainFrame.class.getPackage().getImplementationVersion() != null
+            ? MainFrame.class.getPackage().getImplementationVersion() : "dev";
     private static final String FILE_NAME =
         System.getProperty("user.home") + java.io.File.separator + "Scorpion.dat";
 }

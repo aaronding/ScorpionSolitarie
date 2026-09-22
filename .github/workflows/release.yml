@@ -1,0 +1,36 @@
+name: Release
+
+# Push a tag like v1.2 to build Scorpion.jar and publish it as a GitHub release.
+# The release notes come from the annotated tag's message.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # build.sh reads the version from git tags
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build
+        run: ./build.sh
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          # checkout fetches tags as lightweight; refetch so the annotation is available
+          git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
+          gh release create "$TAG" Scorpion.jar \
+            --title "Scorpion Solitaire ${TAG#v}" --notes-from-tag

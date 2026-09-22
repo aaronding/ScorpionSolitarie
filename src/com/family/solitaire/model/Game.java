@@ -42,7 +42,7 @@ public class Game {
         for (int j=0; j<NCOLS; j++) {
             for (int i=0; i<7; i++) {
                 board.setCard(i, j, deck.getCard(j*7+i));
-                if (j<RESERVE_SIZE && i<4)
+                if (j<4 && i<3)
                     board.getCard(i, j).faceDown();
                 else
                     board.getCard(i, j).faceUp();
@@ -86,6 +86,8 @@ public class Game {
                 fields = line.split("\t");
 
                 for (int row=0; row<fields.length; row++) {
+                    if (fields[row].length() == 0)
+                        continue;
                     board.setCard(row,c,Card.valueOf(Integer.parseInt(fields[row])));
                 }
                 board.getColumn(c).repaintUI();
@@ -212,6 +214,8 @@ public class Game {
         }
         return ret;
     }
+
+    public String getLevel() { return rule == null ? null : rule.getLevel(); }
 
     private boolean isReserveUsed() { return board.getReserve().used(); }
 

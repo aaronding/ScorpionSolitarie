@@ -63,6 +63,6 @@ public class MediumRule extends BaseRule {
     }
 
     public String getLevel() {
-        return "difficult";
+        return "medium";
     }
 }

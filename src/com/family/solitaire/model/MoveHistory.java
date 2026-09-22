@@ -36,14 +36,6 @@ public class MoveHistory {
         history.clear();
     }
 
-    public boolean canUndo() {
-        return current == 0;
-    }
-
-    public boolean canRedo() {
-        return current == history.size();
-    }
-
     public Move next() {
         if (current == history.size())
             return null;

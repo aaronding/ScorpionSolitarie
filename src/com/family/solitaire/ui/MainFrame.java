@@ -260,6 +260,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void loadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadActionPerformed
         try {
             game.load(FILE_NAME);
+            level = game.getLevel();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Failed to load game.");
         }
@@ -317,5 +318,6 @@ public class MainFrame extends javax.swing.JFrame {
     private RearPanel rearPane;
 
     private static final String APP_NAME = "Scorpion Solitaire";
-    private static final String FILE_NAME = "Scorpion.dat";
+    private static final String FILE_NAME =
+        System.getProperty("user.home") + java.io.File.separator + "Scorpion.dat";
 }

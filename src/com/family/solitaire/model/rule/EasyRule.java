@@ -64,6 +64,6 @@ public class EasyRule extends BaseRule {
     }
 
     public String getLevel() {
-        return "difficult";
+        return "easy";
     }
 }

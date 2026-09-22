@@ -38,8 +38,8 @@ public class Deck {
     }
 
     public void shuffle() {
-        for (int i=0; i<NCARDS; i++) {
-            int pos = (int)(NCARDS * Math.random());
+        for (int i=NCARDS-1; i>0; i--) {
+            int pos = (int)((i+1) * Math.random());
             Card tmp = deck[i];
             deck[i] = deck[pos];
             deck[pos] = tmp;

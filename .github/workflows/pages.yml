@@ -1,9 +1,9 @@
 name: Web
 
-# Tests the web version and publishes it to GitHub Pages on every push to master.
+# Tests the web version and publishes it to GitHub Pages on every push to main.
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

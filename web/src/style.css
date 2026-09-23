@@ -1,0 +1,468 @@
+:root {
+  --felt-light: #1f7d47;
+  --felt-dark: #0d4f2c;
+  --bar-bg: #f6f6f4;
+  --bar-fg: #26282b;
+  --bar-muted: #6b6f75;
+  --bar-line: #d9dad7;
+  --notice-bg: #fff4ce;
+  --notice-line: #e6d38f;
+  --accent: #2675bf;
+  --glow: #ffd54f;
+  --dialog-bg: #ffffff;
+  --hover: rgba(0, 0, 0, 0.06);
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bar-bg: #1f2124;
+    --bar-fg: #e8e8e6;
+    --bar-muted: #9a9ea4;
+    --bar-line: #34373b;
+    --notice-bg: #3a3320;
+    --notice-line: #5a4d2a;
+    --accent: #5aa2e6;
+    --dialog-bg: #26282b;
+    --hover: rgba(255, 255, 255, 0.08);
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: var(--felt-dark);
+  color: var(--bar-fg);
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---- the table ---------------------------------------------------------- */
+
+.table {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 25%, var(--felt-light), var(--felt-dark) 85%);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.slot,
+.card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+}
+
+.slot {
+  border-radius: calc(var(--card-w) * 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.slot.reserve:not(.used) {
+  cursor: pointer;
+}
+
+.slot.reserve.used {
+  border-style: dashed;
+}
+
+.card {
+  perspective: calc(var(--card-w) * 6);
+  transition: transform var(--move-ms, 240ms) cubic-bezier(0.2, 0.7, 0.3, 1);
+  will-change: transform;
+}
+
+.card .inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 320ms ease;
+}
+
+.card.down .inner {
+  transform: rotateY(180deg);
+}
+
+.card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--card-w) * 0.042);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* An outline, so backs printed edge to edge don't run into each other. */
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.55),
+    0 -1px 1.5px rgba(0, 0, 0, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.card .back {
+  transform: rotateY(180deg);
+}
+
+.card:not(.down) {
+  cursor: grab;
+}
+
+.locked .card {
+  cursor: default;
+}
+
+.instant .card,
+.instant .card .inner {
+  transition: none !important;
+}
+
+.card.dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.card.dragging img {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.55),
+    0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.card.peek {
+  z-index: 2000 !important;
+}
+
+.card.hint img,
+.slot.hint {
+  box-shadow:
+    0 0 0 3px var(--glow),
+    0 0 14px 3px rgba(255, 213, 79, 0.65);
+}
+
+.card.drop img,
+.slot.drop {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.85),
+    0 0 12px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* ---- notice ---------------------------------------------------------------- */
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 10px 7px 16px;
+  background: var(--notice-bg);
+  border-bottom: 1px solid var(--notice-line);
+}
+
+.notice[hidden] {
+  display: none;
+}
+
+.notice .text {
+  flex: 1;
+}
+
+.notice .actions {
+  display: flex;
+  gap: 6px;
+}
+
+.notice button,
+dialog .buttons button {
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--bar-line);
+  background: var(--dialog-bg);
+  cursor: pointer;
+}
+
+/* ---- bottom bar ------------------------------------------------------------ */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 12px calc(3px + env(safe-area-inset-bottom));
+  background: var(--bar-bg);
+  border-top: 1px solid var(--bar-line);
+  font-size: 13.5px;
+}
+
+.info,
+.score {
+  flex: 1;
+  white-space: nowrap;
+  color: var(--bar-muted);
+}
+
+.score {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+
+.tool:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.tool:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.tool span {
+  font-size: 13px;
+}
+
+.more {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  min-width: 210px;
+  padding: 5px;
+  border-radius: 8px;
+  background: var(--dialog-bg);
+  border: 1px solid var(--bar-line);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+.menu button {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu button:hover:not(:disabled) {
+  background: var(--hover);
+}
+
+.menu button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.menu hr {
+  border: none;
+  border-top: 1px solid var(--bar-line);
+  margin: 4px 6px;
+}
+
+/* Narrower screens: icons only, then status above the tools. */
+@media (max-width: 900px) {
+  .tool span {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .bar {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+  .tools {
+    order: -1;
+    flex-basis: 100%;
+    justify-content: space-around;
+  }
+  .tool {
+    padding: 8px 10px;
+  }
+}
+
+/* ---- dialogs --------------------------------------------------------------- */
+
+dialog {
+  width: min(560px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  padding: 20px 22px 16px;
+  border: none;
+  border-radius: 12px;
+  background: var(--dialog-bg);
+  color: var(--bar-fg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  line-height: 1.45;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+dialog h2 {
+  margin: 0 0 10px;
+  font-size: 19px;
+}
+
+dialog h3 {
+  margin: 18px 0 6px;
+  font-size: 15px;
+}
+
+dialog .note {
+  margin: 0 0 8px;
+  color: var(--bar-muted);
+}
+
+dialog ul {
+  padding-left: 20px;
+}
+
+dialog a {
+  color: var(--accent);
+}
+
+dialog .buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+dialog .buttons .primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+dialog input[type='number'] {
+  width: 100%;
+  padding: 7px 9px;
+  font: inherit;
+  border: 1px solid var(--bar-line);
+  border-radius: 6px;
+  background: transparent;
+}
+
+.levels label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.levels input {
+  margin-top: 4px;
+  accent-color: var(--accent);
+}
+
+.backs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+  gap: 8px;
+}
+
+.backs button {
+  aspect-ratio: 234 / 333;
+  padding: 3px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+
+.backs button:hover {
+  border-color: var(--bar-line);
+}
+
+.backs button[aria-checked='true'] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.backs img {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  display: block;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.5);
+}
+
+.backs span {
+  font-size: 11px;
+  color: var(--bar-muted);
+}
+
+button.link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+table.stats {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats th,
+.stats td {
+  padding: 6px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--bar-line);
+}
+
+.stats th:first-child,
+.stats td:first-child {
+  text-align: left;
+}

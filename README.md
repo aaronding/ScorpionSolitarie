@@ -1,6 +1,6 @@
-This is a Solitarie game I created in 2006 using Java Swing, brought up to date in 2026.
+This is a Solitaire game I created in 2006 using Java Swing, brought up to date in 2026.
 
-Download `Scorpion.jar` from the [latest release](https://github.com/aaronding/ScorpionSolitarie/releases/latest) and run it with Java 11 or newer:
+Download `Scorpion.jar` from the [latest release](https://github.com/aaronding/ScorpionSolitaire/releases/latest) and run it with Java 11 or newer:
 
 ```sh
 java -jar Scorpion.jar
@@ -22,4 +22,4 @@ To run the tests (needs Java 17 or newer):
 
 Card art: [SVG Playing Cards](https://www.tekeye.uk/playing_cards/svg-playing-cards) by Tek Eye, public domain. Uses [FlatLaf](https://www.formdev.com/flatlaf/) and [JSVG](https://github.com/weisJ/jsvg).
 
-![Alt text](https://me.webthinking.io/res/scorpion2.jpg "Scorpion Solitarie")
+![Alt text](https://me.webthinking.io/res/scorpion2.jpg "Scorpion Solitaire")

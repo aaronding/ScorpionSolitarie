@@ -40,7 +40,7 @@ import javax.swing.JTextArea;
  */
 public class AboutDialog extends JDialog {
 
-    private static final String SOURCE_URL = "https://github.com/aaronding/ScorpionSolitarie";
+    private static final String SOURCE_URL = "https://github.com/aaronding/ScorpionSolitaire";
 
     public AboutDialog(Frame parent, Image icon, String appName, String appVer, String author, String email) {
         super(parent, "About " + appName, true);

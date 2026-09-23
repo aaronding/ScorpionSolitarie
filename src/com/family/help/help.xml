@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-    Document   : help.xml.xml
-    Created on : December 12, 2006, 11:14 AM
-    Author     : ading
-    Description:
-        Purpose of the document follows.
--->
-
-<root name="Solitaire">
-    <overview name="Solitaire overview" link="intro.html" />
-    <rule name="Play Solitaire" link="rule.html">
-        <easy name="Easy rule" link="easy.html" />
-        <medium name="Medium rule" link="med.html" />
-        <difficult name="Difficult rule" link="diff.html" />
+<!-- The help contents tree: each entry's page is shown when it is selected. -->
+<root name="Scorpion Solitaire">
+    <overview name="Overview" link="intro.html" />
+    <rule name="How to Play" link="rule.html">
+        <easy name="Easy" link="easy.html" />
+        <medium name="Medium" link="med.html" />
+        <difficult name="Difficult" link="diff.html" />
     </rule>
-    <win name="Win or Lose" link="winlose.html" />
+    <play name="Using the Game" link="play.html" />
+    <win name="Winning and Giving Up" link="winlose.html" />
     <tip name="Tips" link="tip.html" />
 </root>

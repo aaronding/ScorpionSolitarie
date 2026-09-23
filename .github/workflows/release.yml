@@ -22,8 +22,8 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Build
-        run: ./build.sh
+      - name: Build and test
+        run: ./test.sh
 
       - name: Publish release
         env:

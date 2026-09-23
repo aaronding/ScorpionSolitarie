@@ -78,6 +78,9 @@ public class Card {
         return false;
     }
 
+    @Override
+    public int hashCode() { return value; }
+
     private final Rank rank;
     private final Suit suit;
     private final Color color;

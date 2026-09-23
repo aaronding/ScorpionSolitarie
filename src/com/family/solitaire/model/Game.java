@@ -2,185 +2,96 @@
  * Game.java
  *
  * Created on November 29, 2006, 5:09 PM
- *
  */
 
 package com.family.solitaire.model;
 
-import static com.family.solitaire.model.CardConstants.NCARDS;
-import static com.family.solitaire.model.CardConstants.NCOLS;
-import static com.family.solitaire.model.CardConstants.RESERVE_SIZE;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-
-import com.family.solitaire.model.rule.Rule;
-import com.family.solitaire.model.rule.RuleFactory;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
+ * A game in progress: the board, the rule it is played under, and its history.
+ * Every change goes through here so it can be checked and undone.
  *
  * @author Aaron Ding
  */
 public class Game {
 
     public Game() {
-        deck = new Deck();
         board = new Board();
-        history = new MoveHistory();
+        rule = Rule.EASY;
     }
 
-    public void init(String level) {
-        rule = RuleFactory.instance().createRule(level);
-        deck.shuffle();
-        board.clear();
-        deal();
-        history.clear();
+    /** Deals game number {@code dealNumber}; the same number always deals the same cards. */
+    public void deal(Rule rule, int dealNumber) {
+        Deck deck = new Deck();
+        deck.shuffle(new Random(dealNumber));
+        board.deal(deck);
+        start(rule, dealNumber);
     }
 
-    private void deal() {
-        for (int j=0; j<NCOLS; j++) {
-            for (int i=0; i<7; i++) {
-                board.setCard(i, j, deck.getCard(j*7+i));
-                if (j<4 && i<3)
-                    board.getCard(i, j).faceDown();
-                else
-                    board.getCard(i, j).faceUp();
-            }
-            for (int i=7; i<NCARDS; i++) {
-                board.setCard(i,j, null);
-            }
-            board.getColumn(j).repaintUI();
-        }
-
-
-        Card[] t = new Card[RESERVE_SIZE];
-        for (int k=0; k<3; k++) {
-            t[k] = deck.getCard(k+49);
-            t[k].faceDown();
-        }
-        board.getReserve().putCards(t);
-    }
-
-    public void load(String fileName) throws Exception {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(fileName));
-
-            String line = reader.readLine();
-            rule = RuleFactory.instance().createRule(line);
-
-            board.clear();
-
-            line = reader.readLine();
-            String[] fields = line.split("\t");
-            Card[] t = new Card[RESERVE_SIZE];
-            for (int i=0; i<RESERVE_SIZE; i++) {
-                t[i] = Card.valueOf(Integer.parseInt(fields[i]));
-            }
-            board.getReserve().putCards(t);
-
-
-            for (int c=0; c<NCOLS; c++) {
-                line = reader.readLine();
-                fields = line.split("\t");
-
-                for (int row=0; row<fields.length; row++) {
-                    if (fields[row].length() == 0)
-                        continue;
-                    board.setCard(row,c,Card.valueOf(Integer.parseInt(fields[row])));
-                }
-                board.getColumn(c).repaintUI();
-            }
-            history.clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            try { reader.close(); } catch(Exception e) { }
-        }
-    }
-
-    public void save(String fileName) throws Exception {
-
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(fileName);
-            writer.write(rule.getLevel());
-            writer.write("\n");
-            Card[] r = board.getReserve().getCards();
-            for (int i=0; i<RESERVE_SIZE; i++) {
-                if (r[i] == null)
-                    writer.write("99\t");
-                else
-                    writer.write(r[i].toValue() + "\t");
-            }
-            writer.write("\n");
-
-            for (int c=0; c<NCOLS; c++) {
-                Column col = board.getColumn(c);
-                int size = col.getSize();
-                for (int row=0; row<size; row++) {
-                    writer.write(col.getCard(row).toValue() + "\t");
-                }
-                writer.write("\n");
-            }
-        } catch (Exception ioe) {
-            ioe.printStackTrace();
-            throw ioe;
-        } finally {
-            try { writer.close(); } catch(Exception e) { }
-        }
+    void start(Rule rule, int dealNumber) {
+        this.rule = rule;
+        this.dealNumber = dealNumber;
+        done.clear();
+        undone.clear();
+        elapsedMillis = 0;
     }
 
     public boolean move(Move move) {
-        if (rule.isValidMove(move, board)) {
-            if (board.moveCards(move)) {
-                history.clear();
-            } else {
-                history.save(move);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public Move move(Move[] moves) {
-        for(Move move : moves) {
-            if (move(move)) {
-                return move;
-            }
-        }
-        return null;
+        if (!rule.isValidMove(move, board))
+            return false;
+        done.add(board.moveCards(move));
+        undone.clear();
+        return true;
     }
 
     public boolean useReserve() {
         if (isReserveUsed())
             return false;
-
-        Card[] reserve = board.getReserve().pickCards();
-        for (int i=0; i<reserve.length; i++) {
-            int len = board.getColumn(i).getSize();
-            reserve[i].faceUp();
-            board.setCard(len, i, reserve[i]);
-            board.getColumn(i).repaintUI();
-        }
-        history.clear();
+        done.add(board.dealReserve());
+        undone.clear();
         return true;
     }
 
-    public void undo() {
-        Move move = history.previous();
-        if (move != null) {
-            board.moveCards(new Move(move.getTo(), move.getFrom()));
-        }
+    public boolean canUndo() {
+        return !done.isEmpty() && rule.mayUndo(done.get(done.size()-1));
     }
 
-    public void redo() {
-        Move move = history.next();
-        if (move != null) {
-            board.moveCards(move);
-        }
+    /** Takes back the last step if the rule allows it; returns it, or null. */
+    public Step undo() {
+        return canUndo() ? undoLast() : null;
+    }
+
+    /** Takes back the last step whatever the rule says, for finishing a game the player gave up. */
+    public Step forceUndo() {
+        return done.isEmpty() ? null : undoLast();
+    }
+
+    private Step undoLast() {
+        Step step = done.remove(done.size()-1);
+        if (step.isReserveDeal())
+            board.undealReserve();
+        else
+            board.unmoveCards(step);
+        undone.add(step);
+        return step;
+    }
+
+    public boolean canRedo() {
+        return !undone.isEmpty();
+    }
+
+    /** Replays the last undone step; returns it, or null. */
+    public Step redo() {
+        if (undone.isEmpty())
+            return null;
+        Step step = undone.remove(undone.size()-1);
+        Step again = step.isReserveDeal() ? board.dealReserve() : board.moveCards(step.getMove());
+        done.add(again);
+        return again;
     }
 
     // if win return true, otherwise return false
@@ -188,43 +99,43 @@ public class Game {
         return rule.checkResult(board);
     }
 
-    // return null if you lose the game
-    public Move[] getAvailableMove() {
-        Move[] ret = rule.getAvailableMoves(board);
-        if (ret != null) {
-            return ret;
-        } else {
-            if (!isReserveUsed()) {
-                return new Move[] {};
-            }
-        }
-        return null;
+    public List<Move> getAvailableMoves() {
+        return rule.getAvailableMoves(board);
     }
 
-    public boolean isValidFrom(Position p) {
-        return rule.isValidFrom(p, board);
+    /** No hint left and the reserve is gone: the original "You Lose!" test. */
+    public boolean noMovesLeft() {
+        return isReserveUsed() && getAvailableMoves().isEmpty();
     }
 
-    public Card[] getCards(Position p) {
-        int size = board.getColumn(p.column).getSize()- p.row;
+    public boolean isReserveUsed() { return board.getReserve().used(); }
 
-        Card[] ret = new Card[size];
-        for (int i=0; i<size; i++) {
-            ret[i] = board.getColumn(p.column).getCard(p.row+i);
-        }
-        return ret;
-    }
-
-    public String getLevel() { return rule == null ? null : rule.getLevel(); }
-
-    private boolean isReserveUsed() { return board.getReserve().used(); }
-
+    public Board getBoard() { return board; }
     public Column getColumn(int i) { return board.getColumn(i); }
     public Reserve getReserve() { return board.getReserve(); }
+    public Rule getRule() { return rule; }
+    public String getLevel() { return rule.getLevel(); }
 
+    /** The deal number, or 0 if unknown (a game saved by an older version). */
+    public int getDealNumber() { return dealNumber; }
+
+    public List<Step> getHistory() { return Collections.unmodifiableList(done); }
+    public int getMoveCount() { return done.size(); }
+
+    public long getElapsedMillis() { return elapsedMillis; }
+    public void setElapsedMillis(long millis) { elapsedMillis = millis; }
+
+    void restoreHistory(List<Step> steps) {
+        done.clear();
+        done.addAll(steps);
+        undone.clear();
+    }
+
+    private final Board board;
     private Rule rule;
-    private Deck deck;
-    private Board board;
+    private int dealNumber;
+    private long elapsedMillis;
 
-    private MoveHistory history;
+    private final List<Step> done = new ArrayList<Step>();
+    private final List<Step> undone = new ArrayList<Step>();
 }

@@ -1,35 +1,42 @@
 /*
  * Move.java
- *
- * Created on November 29, 2006, 6:24 PM
- *
  */
 
 package com.family.solitaire.model;
 
 /**
+ * Moves the card at {@code fromRow} of {@code fromColumn}, and every card below
+ * it, onto the end of {@code toColumn}.
  *
  * @author Aaron Ding
  */
-public class Move {
+public final class Move {
 
-    public Move() { }
+    public Move(int fromColumn, int fromRow, int toColumn) {
+        this.fromColumn = fromColumn;
+        this.fromRow = fromRow;
+        this.toColumn = toColumn;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Move))
+            return false;
+        Move m = (Move)o;
+        return m.fromColumn == fromColumn && m.fromRow == fromRow && m.toColumn == toColumn;
+    }
+
+    @Override
+    public int hashCode() {
+        return (fromColumn * 64 + fromRow) * 8 + toColumn;
+    }
+
+    @Override
     public String toString() {
-        return from.column + "." + from.row + " -> " + to.column + "." + to.row;
+        return fromColumn + "." + fromRow + " -> " + toColumn;
     }
 
-    public Move(Position from, Position to) {
-        this.from = from;
-        this.to = to;
-    }
-
-    public Position getFrom() { return from; }
-
-    public Position getTo() { return to; }
-
-    public boolean isUseReserve() { return from==null; }
-
-    private Position from;
-    private Position to;
+    public final int fromColumn;
+    public final int fromRow;
+    public final int toColumn;
 }

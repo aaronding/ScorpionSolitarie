@@ -2,6 +2,8 @@ This is a Solitaire game I created in 2006 using Java Swing, brought up to date 
 
 **Play it in your browser: https://aaronding.github.io/ScorpionSolitaire/** (the `web/` folder), or run the desktop version below.
 
+![A game of Scorpion Solitaire in progress](docs/screenshot.png)
+
 Download `Scorpion.jar` from the [latest release](https://github.com/aaronding/ScorpionSolitaire/releases/latest) and run it with Java 11 or newer:
 
 ```sh
@@ -31,5 +33,3 @@ cd web && npm install && npm run dev
 It shares the card art and save-file format with the desktop game, and its tests replay the same rules recording, so both play by identical rules and a game number deals the same cards in either.
 
 Card art: [SVG Playing Cards](https://www.tekeye.uk/playing_cards/svg-playing-cards) by Tek Eye, public domain. Uses [FlatLaf](https://www.formdev.com/flatlaf/) and [JSVG](https://github.com/weisJ/jsvg).
-
-![Alt text](https://me.webthinking.io/res/scorpion2.jpg "Scorpion Solitaire")

@@ -113,10 +113,11 @@ public enum Rule {
                 if (card.rank() == Rank.KING && pos.row == 0)
                     continue;
                 if (pos.row != 0 && target != null) {
+                    // Skip a card already on the next card up in its own suit:
+                    // moving it off never helps.
                     Card above = board.getColumn(pos.column).getCard(pos.row-1);
-                    if (above.isFacedDown())
-                        continue;
-                    if (above.suit() == card.suit())
+                    if (above.isFacedUp() && above.suit() == card.suit()
+                            && above.rank().ordinal() - card.rank().ordinal() == 1)
                         continue;
                 }
                 ret.add(new Move(pos.column, pos.row, j));

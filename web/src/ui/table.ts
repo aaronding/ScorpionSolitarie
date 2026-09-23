@@ -3,7 +3,7 @@ import { type Card, COLUMNS, KING, cardWords, rank, suit } from '../model/card';
 import type { Game } from '../model/game';
 import { isValidMove } from '../model/rule';
 import { faceUrl } from './art';
-import { Layout, type Point } from './layout';
+import { type Insets, Layout, type Point } from './layout';
 
 export interface TableListener {
   /** The player changed the game. */
@@ -90,7 +90,7 @@ export class Table {
   /** Places every card; cards whose place changed glide there over `duration` ms. */
   render(duration = NORMAL): void {
     if (!this.game) return;
-    const lay = (this.lay = new Layout(this.root.clientWidth, this.root.clientHeight, this.game.board));
+    const lay = (this.lay = this.layout());
     this.root.style.setProperty('--card-w', `${lay.cardW}px`);
     this.root.style.setProperty('--card-h', `${lay.cardH}px`);
     this.root.style.setProperty('--move-ms', `${duration}ms`);
@@ -124,6 +124,17 @@ export class Table {
     }
   }
 
+  private layout(): Layout {
+    // The table's padding holds the safe-area insets (see style.css).
+    const style = getComputedStyle(this.root);
+    const insets: Insets = {
+      left: parseFloat(style.paddingLeft) || 0,
+      right: parseFloat(style.paddingRight) || 0,
+      bottom: parseFloat(style.paddingBottom) || 0,
+    };
+    return new Layout(this.root.clientWidth, this.root.clientHeight, this.game.board, insets);
+  }
+
   /** Applies a change to the game and animates the cards it moved. */
   animate(change: () => unknown, duration = NORMAL): void {
     change();
@@ -132,7 +143,7 @@ export class Table {
 
   /** Deals: every card flies out from the reserve corner, one after another. */
   animateDeal(): void {
-    const lay = new Layout(this.root.clientWidth, this.root.clientHeight, this.game.board);
+    const lay = this.layout();
     this.root.classList.add('instant');
     for (const el of this.cards) {
       place(el, lay.reserve);
@@ -217,7 +228,11 @@ export class Table {
       return;
     }
     this.drag = { ...at, pointerId: e.pointerId, start: { x: e.clientX, y: e.clientY }, dx: 0, dy: 0, started: false };
-    this.root.setPointerCapture(e.pointerId);
+    try {
+      this.root.setPointerCapture(e.pointerId); // keep getting moves if the finger leaves the table
+    } catch {
+      // Not a live pointer (synthetic events); dragging still works inside the table.
+    }
   }
 
   private pointerMove(e: PointerEvent): void {

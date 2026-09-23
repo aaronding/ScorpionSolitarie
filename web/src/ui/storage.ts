@@ -69,3 +69,7 @@ export function resetStats(): void {
 /** The game in progress, in the save-file format. */
 export const loadAutosave = (): string | null => read<string | null>('autosave', null);
 export const saveAutosave = (text: string | null): void => write('autosave', text ?? undefined);
+
+/** Whether the "Add to Home Screen" tip has been shown. */
+export const installTipShown = (): boolean => read<boolean>('installTip', false);
+export const setInstallTipShown = (): void => write('installTip', true);

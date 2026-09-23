@@ -48,6 +48,7 @@ export class App {
   private readonly notice = document.getElementById('notice')!;
   private readonly info = document.getElementById('info')!;
   private readonly score = document.getElementById('score')!;
+  private readonly status = document.getElementById('status')!;
   private readonly tools = document.getElementById('tools')!;
   private readonly buttons = new Map<Action, HTMLButtonElement>();
 
@@ -97,6 +98,7 @@ export class App {
         const game = fromText(saved);
         if (!game.isWon()) {
           this.useGame(game);
+          this.suggestInstall();
           return;
         }
       } catch {
@@ -113,6 +115,24 @@ export class App {
       store.saveSettings(this.settings);
     }
     await this.deal(ruleFor(level), 0);
+    this.suggestInstall();
+  }
+
+  /**
+   * In Safari on an iPhone or iPad the browser's bars take a lot of room, and
+   * a web page can't hide them. Installed on the home screen, the game opens
+   * without them; say so, once.
+   */
+  private suggestInstall(): void {
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const installed = matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches ||
+      (navigator as Navigator & { standalone?: boolean }).standalone === true;
+    if (!ios || installed || store.installTipShown()) return;
+    store.setInstallTipShown();
+    this.showNotice('Tip: tap Share, then “Add to Home Screen”, to play full screen without Safari’s bars.', {
+      label: 'OK',
+      run: () => this.hideNotice(),
+    });
   }
 
   // ---- toolbar and keys --------------------------------------------------------
@@ -422,6 +442,7 @@ export class App {
     const n = this.game.dealNumber > 0 ? `Game #${this.game.dealNumber.toLocaleString()} · ` : '';
     this.info.textContent = n + this.game.rule.name;
     this.score.textContent = `Moves ${this.game.moveCount} · ${formatTime(this.elapsed())}`;
+    this.status.textContent = `${this.info.textContent} · ${this.score.textContent}`;
     this.updateActions();
   }
 

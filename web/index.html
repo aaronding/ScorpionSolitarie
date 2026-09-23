@@ -7,13 +7,20 @@
     <meta name="theme-color" content="#16603a" />
     <title>Scorpion Solitaire</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <!-- Installable: from the home screen it opens full screen, without browser bars. -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Scorpion" />
   </head>
   <body>
     <div id="notice" class="notice" role="status" hidden>
       <span class="text"></span>
       <span class="actions"></span>
     </div>
-    <main id="table" class="table" aria-label="Card table"></main>
+    <main id="table" class="table" aria-label="Card table"><div id="status" class="status" aria-hidden="true"></div></main>
     <footer class="bar">
       <span id="info" class="info"></span>
       <nav id="tools" class="tools" aria-label="Game"></nav>

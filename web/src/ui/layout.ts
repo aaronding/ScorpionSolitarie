@@ -9,6 +9,15 @@ export interface Point {
   y: number;
 }
 
+/** Space to keep clear at each edge, such as a phone's notch. */
+export interface Insets {
+  left: number;
+  right: number;
+  bottom: number;
+}
+
+const NO_INSETS: Insets = { left: 0, right: 0, bottom: 0 };
+
 /**
  * Where everything goes on a table of the given size. Wide tables put the
  * reserve to the left of the seven columns, as the desktop game does; tall
@@ -25,10 +34,13 @@ export class Layout {
   private readonly upStep: number[] = [];
 
   constructor(
-    width: number,
+    fullWidth: number,
     height: number,
     private readonly board: Board,
+    insets: Insets = NO_INSETS,
   ) {
+    const width = fullWidth - insets.left - insets.right;
+    height -= insets.bottom;
     const margin = Math.max(8, Math.min(width, height) * 0.02);
     const gapRatio = 0.14;
     const portrait = height > width * 1.1;
@@ -38,7 +50,7 @@ export class Layout {
       cardW = (width - 2 * margin) / (COLUMNS + (COLUMNS - 1) * gapRatio);
       cardW = Math.min(cardW, (height - 2 * margin) / (ASPECT * 3.6));
       const gap = cardW * gapRatio;
-      x0 = (width - (COLUMNS * cardW + (COLUMNS - 1) * gap)) / 2;
+      x0 = insets.left + (width - (COLUMNS * cardW + (COLUMNS - 1) * gap)) / 2;
       for (let c = 0; c < COLUMNS; c++) this.columnX.push(x0 + c * (cardW + gap));
       this.reserve = { x: x0, y: margin };
       this.top = margin + cardW * ASPECT + gap * 1.5;
@@ -46,7 +58,7 @@ export class Layout {
       cardW = (width - 2 * margin) / (8 + COLUMNS * gapRatio + 0.35);
       cardW = Math.min(cardW, (height - 2 * margin) / (ASPECT * 2.6));
       const gap = cardW * gapRatio;
-      x0 = (width - (8 * cardW + COLUMNS * gap + cardW * 0.35)) / 2;
+      x0 = insets.left + (width - (8 * cardW + COLUMNS * gap + cardW * 0.35)) / 2;
       for (let c = 0; c < COLUMNS; c++) this.columnX.push(x0 + cardW * 1.35 + gap + c * (cardW + gap));
       this.reserve = { x: x0, y: margin };
       this.top = margin;

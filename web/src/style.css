@@ -71,6 +71,8 @@ button {
   -webkit-touch-callout: none;
   /* Keeps cards clear of a notch; the layout reads these paddings. */
   padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+  /* Cards' layers stay inside the table, so they never cover the menu. */
+  isolation: isolate;
 }
 
 /* Game number, moves and time, faint in the corner under the cards; only
